@@ -92,7 +92,9 @@ const authSlice = createSlice({
             })
             .addCase(registerUserThunk.fulfilled, (state, action) => {
                 state.loading = false;
-                // Registration successful, but don't log the user in, let them go to the login page manually
+                state.isAuthenticated = true;
+                state.user = { _id: action.payload._id, name: action.payload.name, email: action.payload.email };
+                localStorage.setItem('user', JSON.stringify(state.user));
             })
             .addCase(registerUserThunk.rejected, (state, action) => {
                 state.loading = false;
