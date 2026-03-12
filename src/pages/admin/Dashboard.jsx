@@ -6,6 +6,7 @@ import { Edit, Trash2, Plus, Package, Users, ShoppingBag, X } from 'lucide-react
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import BASE_URL from '../../api';
 
 const AdminDashboard = () => {
     const dispatch = useDispatch();
@@ -38,7 +39,7 @@ const AdminDashboard = () => {
 
     const fetchCategories = async () => {
         try {
-            const { data } = await axios.get('http://localhost:5000/api/categories');
+            const { data } = await axios.get(`${BASE_URL}/api/categories`);
             setCategories(data);
         } catch (err) {
             console.error(err);
@@ -48,7 +49,7 @@ const AdminDashboard = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
             try {
-                await axios.delete(`http://localhost:5000/api/products/${id}`);
+                await axios.delete(`${BASE_URL}/api/products/${id}`);
                 toast.success('Product deleted successfully');
                 dispatch(fetchProducts());
             } catch (err) {
@@ -98,10 +99,10 @@ const AdminDashboard = () => {
 
         try {
             if (isEditing) {
-                await axios.put(`http://localhost:5000/api/products/${formData._id}`, payload);
+                await axios.put(`${BASE_URL}/api/products/${formData._id}`, payload);
                 toast.success('Product updated successfully');
             } else {
-                await axios.post('http://localhost:5000/api/products', payload);
+                await axios.post(`${BASE_URL}/api/products`, payload);
                 toast.success('Product added successfully');
             }
             setIsModalOpen(false);

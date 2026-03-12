@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, MessageCircle, Send } from 'lucide-react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import BASE_URL from '../api';
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -22,7 +23,7 @@ const Contact = () => {
             const config = {
                 headers: { 'Content-Type': 'application/json' },
             };
-            await axios.post('http://localhost:5000/api/contact', formData, config);
+            await axios.post(`${BASE_URL}/api/contact`, formData, config);
 
             toast.success("Message sent successfully! We'll get back to you soon.");
             setFormData({ name: '', email: '', subject: '', message: '' });

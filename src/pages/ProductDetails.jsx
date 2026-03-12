@@ -8,6 +8,7 @@ import { Star, Truck, ShieldCheck, Heart, ShoppingCart, Minus, Plus, MessageCirc
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import BASE_URL from '../api';
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -55,7 +56,7 @@ const ProductDetails = () => {
         if (reviewText.trim() === '') return toast.error("Review comment cannot be empty.");
 
         try {
-            await axios.post('http://localhost:5000/api/reviews', {
+            await axios.post(`${BASE_URL}/api/reviews`, {
                 productId: product._id,
                 rating: reviewRating,
                 comment: reviewText
