@@ -39,7 +39,7 @@ const AdminDashboard = () => {
 
     const fetchCategories = async () => {
         try {
-            const { data } = await axios.get(`${BASE_URL}/api/categories`);
+            const { data } = await axios.get(`${BASE_URL}/api/categories`, { withCredentials: true });
             setCategories(data);
         } catch (err) {
             console.error(err);
@@ -49,7 +49,7 @@ const AdminDashboard = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
             try {
-                await axios.delete(`${BASE_URL}/api/products/${id}`);
+                await axios.delete(`${BASE_URL}/api/products/${id}`, { withCredentials: true });
                 toast.success('Product deleted successfully');
                 dispatch(fetchProducts());
             } catch (err) {
@@ -98,11 +98,12 @@ const AdminDashboard = () => {
         };
 
         try {
+            const config = { withCredentials: true };
             if (isEditing) {
-                await axios.put(`${BASE_URL}/api/products/${formData._id}`, payload);
+                await axios.put(`${BASE_URL}/api/products/${formData._id}`, payload, config);
                 toast.success('Product updated successfully');
             } else {
-                await axios.post(`${BASE_URL}/api/products`, payload);
+                await axios.post(`${BASE_URL}/api/products`, payload, config);
                 toast.success('Product added successfully');
             }
             setIsModalOpen(false);
