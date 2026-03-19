@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import BASE_URL from '../../api';
+import Preloader from '../../components/ui/Preloader';
 
 const AdminDashboard = () => {
     const dispatch = useDispatch();
@@ -120,7 +121,7 @@ const AdminDashboard = () => {
         { title: "Total Orders", value: "854", icon: <ShoppingBag size={24} className="text-green-500" /> }
     ];
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center font-bold text-primary">Loading Admin...</div>;
+    if (loading) return <Preloader />;
 
     return (
         <div className="bg-background dark:bg-dark-bg min-h-screen py-16">

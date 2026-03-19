@@ -5,6 +5,7 @@ import { getUserOrders, cancelOrder } from '../redux/slices/orderSlice';
 import { LogOut, Package, User, MapPin, ShieldCheck, Plus, XCircle } from 'lucide-react';
 import { logout } from '../redux/slices/authSlice';
 import Swal from 'sweetalert2';
+import Preloader from '../components/ui/Preloader';
 
 const Profile = () => {
     const dispatch = useDispatch();
@@ -129,7 +130,7 @@ const Profile = () => {
 
                             {activeTab === 'orders' ? (
                                 loading ? (
-                                    <div className="py-20 text-center text-primary font-bold">Loading Orders...</div>
+                                    <div className="py-20 flex justify-center"><Preloader /></div>
                                 ) : orders.length === 0 ? (
                                     <div className="text-center py-20">
                                         <Package size={48} className="mx-auto text-gray-300 dark:text-dark-muted mb-4" />

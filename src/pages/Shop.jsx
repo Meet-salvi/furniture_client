@@ -8,6 +8,7 @@ import { toggleWishlist } from '../redux/slices/wishlistSlice';
 import { fetchProducts } from '../redux/slices/productSlice';
 import { fetchCategories } from '../redux/slices/categorySlice';
 import { addToCompare } from '../redux/slices/compareSlice';
+import Preloader from '../components/ui/Preloader';
 
 const Shop = () => {
     const dispatch = useDispatch();
@@ -57,6 +58,8 @@ const Shop = () => {
     if (productsError) {
         return <div className="min-h-screen flex items-center justify-center text-red-500 font-bold">{productsError}</div>;
     }
+
+    if (productsLoading && products.length === 0) return <Preloader />;
 
     return (
         <div className="bg-background dark:bg-dark-bg min-h-screen py-16 transition-colors duration-300">

@@ -10,6 +10,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import BASE_URL from '../api';
 
+import Preloader from '../components/ui/Preloader';
+
 const ProductDetails = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
@@ -42,7 +44,7 @@ const ProductDetails = () => {
         }
     }, [product]);
 
-    if (loading) return <div className="py-32 text-center text-primary font-bold">Loading...</div>;
+    if (loading) return <Preloader />;
     if (error) return <div className="py-32 text-center text-red-500 font-bold">{error}</div>;
     if (!product) return <div className="py-32 text-center text-secondary font-serif text-2xl">Product not found</div>;
 

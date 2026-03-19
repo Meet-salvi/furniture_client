@@ -5,16 +5,20 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts } from '../redux/slices/productSlice';
 
+import Preloader from '../components/ui/Preloader';
+
 const Collections = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { items: products } = useSelector((state) => state.products);
+    const { items: products, loading } = useSelector((state) => state.products);
 
     useEffect(() => {
         if (products.length === 0) {
             dispatch(fetchProducts());
         }
     }, [dispatch, products.length]);
+
+    if (loading) return <Preloader />;
 
     // Use dynamic top 4 ranked/first fetched products
     const dynamicBestSellers = products && products.length > 0

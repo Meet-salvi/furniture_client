@@ -37,8 +37,15 @@ const FeaturedProducts = () => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-                    {loading && displayProducts.length === 0 ? (
-                        <div className="col-span-full text-center py-10 text-gray-500">Loading featured products...</div>
+                    {loading ? (
+                        [1, 2, 3, 4].map(i => (
+                            <div key={i} className="animate-pulse">
+                                <div className="aspect-[4/5] rounded-xl bg-gray-200 dark:bg-dark-surface mb-6"></div>
+                                <div className="h-4 bg-gray-200 dark:bg-dark-surface rounded w-1/4 mx-auto mb-2"></div>
+                                <div className="h-6 bg-gray-200 dark:bg-dark-surface rounded w-3/4 mx-auto mb-2"></div>
+                                <div className="h-4 bg-gray-200 dark:bg-dark-surface rounded w-1/4 mx-auto"></div>
+                            </div>
+                        ))
                     ) : (
                         displayProducts.map((product, index) => (
                             <motion.div
