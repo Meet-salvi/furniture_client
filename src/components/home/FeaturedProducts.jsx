@@ -50,12 +50,13 @@ const FeaturedProducts = () => {
                                 className="group cursor-pointer"
                             >
                                 <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-gray-100 dark:bg-dark-card mb-6">
-                                    <img
-                                        src={product.images && product.images.length > 0 ? product.images[0] : 'https://placehold.co/400x500/eee/333?text=No+Image'}
-                                        alt={product.name}
-                                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
-                                    />
-
+                                    <Link to={`/product/${product._id}`}>
+                                        <img
+                                            src={product.images && product.images.length > 0 ? product.images[0] : 'https://placehold.co/400x500/eee/333?text=No+Image'}
+                                            alt={product.name}
+                                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                                        />
+                                    </Link>
                                     {/* Overlay actions */}
                                     <div className="absolute inset-x-0 bottom-0 p-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex justify-center gap-3">
                                         <button

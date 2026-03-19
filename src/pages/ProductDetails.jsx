@@ -289,15 +289,17 @@ const ProductDetails = () => {
                             {relatedProducts.map(related => (
                                 <div key={related._id} className="group cursor-pointer">
                                     <div className="aspect-square rounded-xl overflow-hidden bg-gray-50 dark:bg-dark-card mb-4 border border-gray-100 dark:border-dark-border relative">
-                                        <img
-                                            src={related.images && related.images.length > 0 ? related.images[0] : 'https://placehold.co/400?text=No+Image'}
-                                            alt={related.name}
-                                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 bg-white"
-                                        />
-                                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <Link to={`/product/${related._id}`} className="bg-white text-secondary px-6 py-3 rounded-full text-sm font-bold shadow-lg uppercase tracking-wider hover:bg-primary hover:text-white transition-colors">
+                                        <Link to={`/product/${related._id}`}>
+                                            <img
+                                                src={related.images && related.images.length > 0 ? related.images[0] : 'https://placehold.co/400?text=No+Image'}
+                                                alt={related.name}
+                                                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 bg-white"
+                                            />
+                                        </Link>
+                                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                            <div className="bg-white text-secondary px-6 py-3 rounded-full text-sm font-bold shadow-lg uppercase tracking-wider hover:bg-primary hover:text-white transition-colors">
                                                 View Details
-                                            </Link>
+                                            </div>
                                         </div>
                                     </div>
                                     <h3 className="text-lg font-serif text-secondary dark:text-dark-text mb-1 truncate group-hover:text-primary transition-colors">{related.name}</h3>

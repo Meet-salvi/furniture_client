@@ -6,17 +6,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../redux/slices/cartSlice';
 import { toggleWishlist } from '../redux/slices/wishlistSlice';
 import { fetchProducts } from '../redux/slices/productSlice';
+import { fetchCategories } from '../redux/slices/categorySlice';
 import { addToCompare } from '../redux/slices/compareSlice';
 
 const Shop = () => {
     const dispatch = useDispatch();
-    const { items: products, loading, error } = useSelector((state) => state.products);
+    const { items: products, loading: productsLoading, error: productsError } = useSelector((state) => state.products);
+    const { items: categoriesData, loading: categoriesLoading } = useSelector((state) => state.categories);
     const [searchParams] = useSearchParams();
     const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
     const [categoryFilter, setCategoryFilter] = useState('All');
 
     useEffect(() => {
         dispatch(fetchProducts());
+        dispatch(fetchCategories());
     }, [dispatch]);
 
     // Sync URL search param with local state
@@ -33,14 +36,26 @@ const Shop = () => {
         p.name?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const categories = ['All', 'Chairs', 'Sofas', 'Tables', 'Beds', 'Decor'];
+    const categories = ['All', ...categoriesData.map(cat => cat.name)];
 
-    if (loading) {
-        return <div className="min-h-screen flex items-center justify-center text-primary font-bold">Loading...</div>;
-    }
+    const ProductSkeleton = () => (
+        <div className="bg-white dark:bg-dark-card p-4 rounded-2xl border border-gray-100 dark:border-dark-border animate-pulse">
+            <div className="aspect-square rounded-xl bg-gray-200 dark:bg-dark-surface mb-4"></div>
+            <div className="h-4 bg-gray-200 dark:bg-dark-surface rounded w-1/4 mb-2"></div>
+            <div className="h-6 bg-gray-200 dark:bg-dark-surface rounded w-3/4 mb-2"></div>
+            <div className="flex justify-between mt-3">
+                <div className="h-6 bg-gray-200 dark:bg-dark-surface rounded w-1/4"></div>
+                <div className="h-4 bg-gray-200 dark:bg-dark-surface rounded w-1/4"></div>
+            </div>
+        </div>
+    );
 
-    if (error) {
-        return <div className="min-h-screen flex items-center justify-center text-red-500 font-bold">{error}</div>;
+    const CategorySkeleton = () => (
+        <div className="h-10 w-24 bg-gray-200 dark:bg-dark-surface rounded-full animate-pulse mr-2"></div>
+    );
+
+    if (productsError) {
+        return <div className="min-h-screen flex items-center justify-center text-red-500 font-bold">{productsError}</div>;
     }
 
     return (
@@ -76,18 +91,27 @@ const Shop = () => {
                         <div className="flex items-center text-sm font-medium text-gray-500 dark:text-dark-muted mr-2">
                             <SlidersHorizontal size={18} className="mr-2" /> Filters
                         </div>
-                        {categories.map(cat => (
-                            <button
-                                key={cat}
-                                onClick={() => setCategoryFilter(cat)}
-                                className={`px-5 py-2 rounded-full text-sm whitespace-nowrap transition-colors border ${categoryFilter === cat
-                                    ? 'bg-secondary dark:bg-primary text-white border-secondary dark:border-primary'
-                                    : 'bg-white dark:bg-dark-card text-gray-600 dark:text-dark-muted border-gray-200 dark:border-dark-border hover:border-primary hover:text-primary'
-                                    }`}
-                            >
-                                {cat}
-                            </button>
-                        ))}
+                        {categoriesLoading ? (
+                            <div className="flex">
+                                <CategorySkeleton />
+                                <CategorySkeleton />
+                                <CategorySkeleton />
+                                <CategorySkeleton />
+                            </div>
+                        ) : (
+                            categories.map(cat => (
+                                <button
+                                    key={cat}
+                                    onClick={() => setCategoryFilter(cat)}
+                                    className={`px-5 py-2 rounded-full text-sm whitespace-nowrap transition-colors border ${categoryFilter === cat
+                                        ? 'bg-secondary dark:bg-primary text-white border-secondary dark:border-primary'
+                                        : 'bg-white dark:bg-dark-card text-gray-600 dark:text-dark-muted border-gray-200 dark:border-dark-border hover:border-primary hover:text-primary'
+                                        }`}
+                                >
+                                    {cat}
+                                </button>
+                            ))
+                        )}
 
                         <div className="relative ml-4 group">
                             <button className="flex items-center gap-2 px-5 py-2 bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-full text-sm text-gray-600 dark:text-dark-muted hover:border-primary hover:text-primary transition-colors">
@@ -98,7 +122,11 @@ const Shop = () => {
                 </div>
 
                 {/* Product Grid */}
-                {filteredProducts.length === 0 ? (
+                {productsLoading ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map(i => <ProductSkeleton key={i} />)}
+                    </div>
+                ) : filteredProducts.length === 0 ? (
                     <div className="text-center py-20 bg-white dark:bg-dark-card rounded-2xl border border-gray-100 dark:border-dark-border">
                         <p className="text-gray-500 dark:text-dark-muted">No products found for your search.</p>
                         <button
@@ -119,11 +147,13 @@ const Shop = () => {
                                 className="group bg-white dark:bg-dark-card p-4 rounded-2xl border border-gray-100 dark:border-dark-border hover:shadow-xl hover:border-transparent transition-all duration-300"
                             >
                                 <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-50 dark:bg-dark-surface mb-4">
-                                    <img
-                                        src={product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/400?text=No+Image'}
-                                        alt={product.name}
-                                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out bg-white"
-                                    />
+                                    <Link to={`/product/${product._id}`}>
+                                        <img
+                                            src={product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/400?text=No+Image'}
+                                            alt={product.name}
+                                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out bg-white"
+                                        />
+                                    </Link>
                                     <div className="absolute top-3 right-3 flex flex-col gap-2">
                                         <button
                                             onClick={() => dispatch(addToCompare(product))}

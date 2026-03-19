@@ -212,11 +212,13 @@ const Collections = () => {
                             className="group cursor-pointer"
                         >
                             <div className="relative aspect-[4/5] overflow-hidden rounded-sm mb-4 bg-gray-100 dark:bg-dark-surface">
-                                <img
-                                    src={product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/400?text=No+Image'}
-                                    alt={product.name}
-                                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 bg-white"
-                                />
+                                <Link to={`/product/${product._id}`}>
+                                    <img
+                                        src={product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/400?text=No+Image'}
+                                        alt={product.name}
+                                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 bg-white"
+                                    />
+                                </Link>
                                 <div className="absolute top-4 left-4 bg-[#B5A48B] px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-white shadow-md">
                                     Best Buy
                                 </div>
